@@ -1,0 +1,12 @@
+# UX
+Make users feel the buttons
+- Improve the reactivity for smartphone
+	(idea: make the button hover effect longer)
+Add possiblity to use keyboard's arrow keys when control block selected
+Clean ingrated waypoints code
+Allow zoom on blocks by clicking on the block titles
+
+# Front-end
+
+# Back-end
+Récupérer les coordonnées approximative du vehicule à travers PHP et en faire des variables COORDINATES

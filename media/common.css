@@ -1,0 +1,140 @@
+/* CSS variables */
+@font-face {
+    font-family: "Arrow";
+    src: url(Arrows.otf);
+  }
+
+:root{
+    --font : "Lato", sans-serif;
+    --arrow-font: "Arrow", sans-serif;
+}
+
+/* Common elements */
+
+body{
+    font-family: var(--font), sans-serif;
+    background-color: #f0f3ff;
+}
+
+.bg-logo{
+    opacity: 0.3;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 70vw;
+    z-index: -10;
+    
+}
+
+.logo{
+    position: absolute;
+    top:0;
+    left: 0;
+    margin: 15px;
+    height: 5em;
+}
+
+h1{
+    text-align: center;
+}
+
+#dashboard h4:first-of-type{
+    text-align: right;
+    opacity: 0.7;
+}
+
+.block > div{
+    box-shadow: 0px 0px 10px -7px #00f;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #dde;
+    background: white;
+    padding: 13px 10px 10px 10px;
+}
+
+.block .field{
+    border-radius: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #dde;
+    background: white;
+    padding: 10px;
+}
+.block .field div{
+    text-align: right;
+    font-weight: bold;
+    color: #001e
+}
+
+.block h2{
+    margin-bottom: 0px;
+}
+
+
+#video_flow{
+    display: block;
+}
+
+
+/* Emphasize data*/
+.boolean.field.true :last-child{
+    color: rgb(9, 158, 34);
+}
+.boolean.field.false :last-child{
+    color: rgb(158, 9, 29);
+}
+
+
+button{
+    padding: 5px 25px;
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: solid 1px grey;
+    margin: 5px 3px;
+    font-family: var(--font)
+}
+
+button:hover{
+    box-shadow: none !important;
+}
+
+button:active:hover{
+    background-color: white !important;
+    color: black;
+    border-color: black;
+}
+button.emergency{
+    background-color: red;
+    color: white;
+    border-color:  darkred;
+    box-shadow: 0px 0px 10px -5px black;
+}
+
+footer{
+    text-align: center;
+}
+#controls > div{
+    display: grid;
+    grid-template-columns: repeat(3,1fr)
+}
+
+#controls button{
+    font-family: var(--arrow-font);
+    font-size: 3em;
+}
+
+#video div{
+    text-align: center;
+}
+
+#video_flow{
+    max-width: 100%;
+    cursor: zoom-in;
+    max-height: 50vh;
+}
+
+#map{
+    width: 100%;
+    min-height: 200px;
+}
