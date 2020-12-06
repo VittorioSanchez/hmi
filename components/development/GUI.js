@@ -110,7 +110,7 @@ class VideoBlock extends Block{
         let url = this.props.url        //let url = `http://${this.props.ip}/fond.png`;
         return (
         <div className="block video" id={this.props.id}>
-            <h2>Video</h2>
+            <h2>{this.props.name}</h2>
             <div>
             <small>Server Address: {LOCALHOST}</small>
                     <img id="video_flow" src={url} title="Click to show in fullscreen" onClick={this.toggleFullscreen}>
@@ -156,7 +156,8 @@ class DashBoard extends React.Component{
 
     render(){
         return (<div><h4>Dashboard</h4><div className="content">
-            <VideoBlock id="video" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+            <VideoBlock id="video" name="Camera" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+            <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
             <Block name="Emergency" id="emergency">
                 <button className="emergency" onClick={StopVehicle}>Stop vehicle</button>
                 <button onClick={MoveForward}>Move Forward</button>
