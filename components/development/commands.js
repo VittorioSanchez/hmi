@@ -67,8 +67,8 @@ function MoveForward(){
 
 function slowDown(){
   console.log("Slow Down");
-  if (speedValue.angular.z <= 0) {
-    speedValue.linear.x = 0;
+  if (speedValue.angular.z <= -60) {
+    speedValue.linear.x = -60;
   } else {
     speedValue.linear.x -= 20;
   }

@@ -24,7 +24,7 @@
 		// -----------------
 
 		var ros = new ROSLIB.Ros({
-		url : 'ws://'+LOCALHOST+':9090'
+		url : 'ws://'+LOCALHOST+':1609'
 		});
 
 		ros.on('connection', function() {
@@ -44,7 +44,7 @@
 
 		var cmdVel = new ROSLIB.Topic({
 		ros : ros,
-		name : '/cmd_vel',
+		name : '/speed_cmd',
 		messageType : 'geometry_msgs/Twist'
 		});
 
