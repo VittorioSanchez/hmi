@@ -207,7 +207,9 @@ class DashBoard extends React.Component{
                 <VideoBlock id="direct-video" name="Direct stream" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
                 <VideoBlock id="ai-video" name="Object Detection" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
             </Tab>
+
             <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+
             <Block name="Emergency" id="emergency">
                 <button className="emergency" onClick={StopVehicle}>Stop vehicle</button>
                 <button onClick={MoveForward}>Move Forward</button>
@@ -289,5 +291,3 @@ function ShowAlert(){
 //Show a Dashboard
 const domContainer = document.querySelector('#dashboard');
 ReactDOM.render( <DashBoard /> , domContainer);
-
-console.log(<div><li></li><li></li></div>);

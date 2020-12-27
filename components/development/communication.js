@@ -9,7 +9,7 @@ window.onload = function(){
       // ------------------
     var listener = new ROSLIB.Topic({
         ros : ros,
-        name : '/mot_sens',
+        name : '/motor_sensors',
         messageType : 'std_msgs/Float32MultiArray'
     });
 
