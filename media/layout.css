@@ -1,10 +1,21 @@
 
 /* Smartphone layout */
 @media(max-width: 10cm){
+    #dashboard .content{ 
+        display: grid;
+        grid-template-columns: 100%;
+    }
+
     .block{
         margin: 25px 5px;
     }
     
+    #controls{
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 2;
+        grid-row-end: 3;
+    }
 }
 
 /*Computer layout*/

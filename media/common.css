@@ -7,6 +7,9 @@
 :root{
     --font : "Lato", sans-serif;
     --arrow-font: "Arrow", sans-serif;
+
+    --button-shadow: 0px 0px 10px -5px;
+    --button-texthovershadow: 0px 0px 10px  #0007;
 }
 
 /* Common elements */
@@ -97,18 +100,57 @@ button{
 
 button:hover{
     box-shadow: none !important;
+    text-shadow: var(--button-texthovershadow);
+    font-weight: bold;
 }
 
 button:active:hover{
     background-color: white !important;
     color: black;
     border-color: black;
+    text-shadow: var(--button-texthovershadow);
 }
 button.emergency{
     background-color: red;
     color: white;
     border-color:  darkred;
-    box-shadow: 0px 0px 10px -5px black;
+    box-shadow: var(--button-shadow);
+}
+
+.tab{
+    display: flex;
+    padding: 0px;
+    list-style: none;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px -2.5px black inset;
+    background-color: #0001;
+}
+
+.tab li{
+    cursor: pointer;
+    flex: 1 1 auto;
+    padding: 7px 0px;
+
+    border-radius: 5px;
+    /*background-color: #0004;*/
+
+   
+    
+}
+
+.tab li:hover{
+    
+    text-shadow: var(--button-texthovershadow);
+    color:  rgb(109, 0, 15);
+    font-weight: bold;
+}
+
+.tab li.selected{
+    background-color:red;
+    text-shadow: var(--button-texthovershadow);
+    color: white;
+    font-weight: bold;
+    box-shadow: var(--button-shadow);
 }
 
 footer{

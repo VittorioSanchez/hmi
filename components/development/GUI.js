@@ -27,25 +27,7 @@ class ReadOnlyField extends React.Component{
         return (<div className={`readOnly field ${this.props.type} ${otherClasses}`}>{this.props.children} {this.renderValue()}</div>)
     }
 
-    renderValue(){/*
-        var component;
-        switch (this.props.type) {
-            case "boolean":
-                component =                 break;
-            case "text":
-
-                break;
-            case "value":
-                let color = (this.props.color != undefined) ? this.props.color : "inherit";
-                <div style={"color: "+ color} className={(this.props.type)}>{this.props.value}</div>
-                break;
-            default:
-                component = <div>{this.props.type}</div>;
-                console.warn(`The ${this.props.name}'s type is undefined`);
-                console.log(this);
-                break;
-        }
-        return component;*/
+    renderValue(){
         return <div>{this.props.value}</div>;
     }
 }
@@ -62,16 +44,28 @@ class Separator extends React.Component{
 }
 
 class Block extends React.Component{
-    render(){
+    constructor(props){
+        super(props);
+        this.className = "block";
+        //Define if the object is in a tab
+        this.tabbed = (props.tabbed == "true");
+    }
 
-       return (
-            <div className="block" id={this.props.id}>
+    render(){
+        //Avoid container if the element is in a tab
+        if(this.tabbed)
+         return this.renderContent();
+
+        //Draw a container if the element is not in a tab
+        return (
+            <div className={this.className} id={this.props.id}>
                 <h2>{this.props.name}</h2>
                 <div>{this.renderContent()}</div>
             </div>
         );
     }
     
+    //Content of the block
     renderContent(){
         return this.props.children;
     }
@@ -83,6 +77,7 @@ class VideoBlock extends Block{
 
         this.toggleFullscreen = this.toggleFullscreen.bind(this);
         this.fullscreen = false;
+        this.className = "video "+this.className;
     }
 
     toggleFullscreen(event){
@@ -90,7 +85,6 @@ class VideoBlock extends Block{
         let elem = event.target;
 
         if (this.fullscreen) {
-        	//console.log('Go Fullscreen');
 
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
@@ -100,24 +94,77 @@ class VideoBlock extends Block{
                 elem.msRequestFullscreen();
             }
         }else{
-        	//console.log('Leave Fullscreen');
             document.exitFullscreen();
         }
     }
 
-    render(){
+    //Content of the video block
+    renderContent(){
+        return  (<div>
+        <small>Server Address: {LOCALHOST}</small>
+                <img id="video_flow" src={this.props.url} title="Click to show in fullscreen" onClick={this.toggleFullscreen}>
+                </img>
+        </div>);
+    }
+}
 
-        let url = this.props.url        //let url = `http://${this.props.ip}/fond.png`;
-        return (
-        <div className="block video" id={this.props.id}>
-            <h2>{this.props.name}</h2>
-            <div>
-            <small>Server Address: {LOCALHOST}</small>
-                    <img id="video_flow" src={url} title="Click to show in fullscreen" onClick={this.toggleFullscreen}>
-                    </img>
-            </div>
-        </div>
-        )
+class Tab extends Block{
+    constructor(props){
+        super(props);
+
+        //  Set these values if the property is available
+        //Choose the first element selected by reading the selected property
+        this.selected = (props.selected == undefined)? 0 : props.selected;
+        this.tabPosition = (props.position == undefined)? "top" : props.position;
+        //Ensure that the value cannot be an unexpected value
+        if(["top","bottom"].indexOf(this.tabPosition) == -1){
+            this.tabPosition = "bottom";
+        }
+
+        this.setSelected = this.setSelected.bind(this);
+    }
+
+    isSelected(item){
+        this.itemNumber++;
+        let classAttribute = (item == this.props.children[this.selected])?
+                                    "selected" : "";
+        return classAttribute;
+    }
+
+    setSelected(number){
+       this.selected = number.target.id;
+       //console.log(number.target.id);
+    }
+
+    getTabs(side){
+        if(side != this.tabPosition){
+            return "";
+        }
+        //Utiliser du React pur
+        let list = this.props.children;   
+        this.itemNumber = -1;
+        let tabs = <ul className="tab">{list.map((item)=>(
+                        <li className={this.isSelected(item)} id={this.itemNumber} key={item.props.id} onClick={this.setSelected}>
+                            {item.props.name}
+                        </li>)
+                        )}
+                    </ul>;
+
+        return tabs;
+    }
+
+    renderContent(){
+        if(this.props.children.length > 1){
+            let content = ( <div>                
+                    {this.getTabs("top")}
+                    {this.props.children[this.selected]}
+                    {this.getTabs("bottom")}
+                </div>
+                );
+
+            return content;
+        }
+        return this.props.children;
     }
 }
 
@@ -156,7 +203,10 @@ class DashBoard extends React.Component{
 
     render(){
         return (<div><h4>Dashboard</h4><div className="content">
-            <VideoBlock id="video" name="Camera" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+            <Tab id="video" name="Camera" position="bottom">
+                <VideoBlock id="direct-video" name="Direct stream" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+                <VideoBlock id="ai-video" name="Object Detection" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+            </Tab>
             <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
             <Block name="Emergency" id="emergency">
                 <button className="emergency" onClick={StopVehicle}>Stop vehicle</button>
@@ -186,7 +236,7 @@ class DashBoard extends React.Component{
                     name="second_field" 
                     type="boolean" 
                     value="false">
-                        Defaillance state
+                        Fault state
                 </ReadOnlyField>
                 <ReadOnlyField 
                     name="value_field" 
@@ -240,4 +290,4 @@ function ShowAlert(){
 const domContainer = document.querySelector('#dashboard');
 ReactDOM.render( <DashBoard /> , domContainer);
 
-
+console.log(<div><li></li><li></li></div>);

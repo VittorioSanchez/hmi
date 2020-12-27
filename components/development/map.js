@@ -126,7 +126,6 @@ class GMap extends React.Component{
     content = (this.coordinates.clicked) ? 
     <p>Latitude: {this.coordinates.latitude} Longitude: {this.coordinates.longitude}</p>:
     "";
-    console.log(this.coordinates.clicked);
     return content;
   }
 
