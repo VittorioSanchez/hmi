@@ -56,7 +56,7 @@ function TurnRight(){
 
 function MoveForward(){
   console.log("Move the vehicle Forward");
-    if (speedValue.angular.z >= 60) {
+  if (speedValue.linear.x >= 60) {
     speedValue.linear.x = 60;
   } else {
     speedValue.linear.x += 20;
@@ -67,7 +67,7 @@ function MoveForward(){
 
 function slowDown(){
   console.log("Slow Down");
-  if (speedValue.angular.z <= 0) {
+  if (speedValue.linear.x <= 0) {
     speedValue.linear.x = 0;
   } else {
     speedValue.linear.x -= 20;
