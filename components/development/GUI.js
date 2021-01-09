@@ -196,6 +196,11 @@ class DashBoard extends React.Component{
             var state = this.state;
             state.refreshed = (state.refreshed + 1) % 10;
 
+            //Send instruction periodically
+            if(speedValue.linear.x >0){
+                SendMoveCommand();
+            }
+
             //Updating
             this.setState(state);
         }.bind(this),500);
@@ -222,7 +227,12 @@ class DashBoard extends React.Component{
                         Speed
                 </ReadOnlyField>
                     <button className="up" onClick={MoveForward}>S</button>
-                    <p></p>
+                    <ReadOnlyField 
+                    name="angle" 
+                    type="value" 
+                    value={NaN}>
+                        Angle
+                </ReadOnlyField>
                     <button className="left" onClick={TurnLeft}>R</button>
                     <button className="down" onClick={slowDown}>T</button>
                     <button className="right" onClick={TurnRight}>Q</button>
@@ -233,12 +243,6 @@ class DashBoard extends React.Component{
                     type="value" 
                     value={Bat_mes}>
                         Batterie level
-                </ReadOnlyField>
-                <ReadOnlyField 
-                    name="second_field" 
-                    type="boolean" 
-                    value="false">
-                        Fault state
                 </ReadOnlyField>
                 <ReadOnlyField 
                     name="value_field" 

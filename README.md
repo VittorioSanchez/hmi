@@ -30,7 +30,7 @@ When installed go to the /var directory and change the owner of www
 
 ```bash
 cd /var/
-sudo chown -R <"username"> www
+sudo chown -R <username> www
 ```
 
 Then delete the html folder
@@ -49,7 +49,7 @@ sudo mv html old.html
 Clone the git in the /var/www directory
 
 ```bash
-git clone https://github.com/JeanGove/geicar-hmi
+git clone https://github.com/siec2020/hmi
 ```
 
 Rename the directory to html
@@ -59,3 +59,6 @@ mv geicar-hmi html
 ```
 
 Then go to this url http://127.0.0.1/ , to see the hmi
+
+### Notes
+Video stream requires a ROS server well configured
