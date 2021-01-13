@@ -71,6 +71,27 @@ class Block extends React.Component{
     }
 }
 
+var detection_string_array = ['nothing', 'nothing', 'nothing', 'nothing', 'nothing'];
+
+class Block_array extends React.Component{
+    constructor(props){
+        super(props);
+        this.className = "block_array";
+        //Define if the object is in a tab
+        this.tabbed = (props.tabbed == "true");
+    }
+
+    render(){
+        return (
+            <ol>
+            {detection_string_array.map(detection => (
+              <li key={detection}>{detection}</li>
+            ))}
+            </ol>
+        );
+    }
+}
+
 class VideoBlock extends Block{
     constructor(props){
         super(props);
@@ -210,10 +231,12 @@ class DashBoard extends React.Component{
         return (<div><h4>Dashboard</h4><div className="content">
             <Tab id="video" name="Camera" position="bottom">
                 <VideoBlock id="direct-video" name="Direct stream" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
-                <VideoBlock id="ai-video" name="Object Detection" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+                <VideoBlock id="ai-video" name="Object Detection" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/detection_node/image&type=ros_compressed`}></VideoBlock>
             </Tab>
 
             <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
+
+            <Block_array name="Latest detections" id="emergency"></Block_array>
 
             <Block name="Emergency" id="emergency">
                 <button className="emergency" onClick={StopVehicle}>Stop vehicle</button>
