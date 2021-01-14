@@ -32,9 +32,7 @@ class ReadOnlyField extends React.Component{
         return <div>{this.props.value}</div>;
     }
     renderArray(){
-        return this.props.value.forEach(function(item, index, array){
-            <li>{item}</li>
-        });
+        return this.props.value.map((detection) => <li>{detection}</li>);
         
     }
 }
