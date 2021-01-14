@@ -71,27 +71,6 @@ class Block extends React.Component{
     }
 }
 
-var detection_string_array = ['nothing', 'nothing', 'nothing', 'nothing', 'nothing'];
-
-class Block_array extends React.Component{
-    constructor(props){
-        super(props);
-        this.className = "block_array";
-        //Define if the object is in a tab
-        this.tabbed = (props.tabbed == "true");
-    }
-
-    render(){
-        return (
-            <ol>
-            {detection_string_array.map(detection => (
-              <li key={detection}>{detection}</li>
-            ))}
-            </ol>
-        );
-    }
-}
-
 class VideoBlock extends Block{
     constructor(props){
         super(props);
@@ -236,7 +215,14 @@ class DashBoard extends React.Component{
 
             <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
 
-            <Block_array name="Latest detections" id="emergency"></Block_array>
+            <Block name="Detections" id="detections">
+                <ReadOnlyField 
+                        name="speed_desired" 
+                        type="value" 
+                        value={detection_string_array[0]}>
+                            1:
+                </ReadOnlyField>
+            </Block>
 
             <Block name="Emergency" id="emergency">
                 <button className="emergency" onClick={StopVehicle}>Stop vehicle</button>
