@@ -18,7 +18,7 @@ window.onload = function(){
     // We create a listener to the detection topic
     var listener_detection = new ROSLIB.Topic({
         ros : ros,
-        name : 'detection',
+        name : '/detection',
         messageType : 'std_msgs/UInt8'
     });
 
