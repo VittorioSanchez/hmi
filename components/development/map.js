@@ -18,6 +18,13 @@ class GMap extends React.Component{
     this.mapPath; //Last point placed on the map
     this.path = new Array(); // Set of coordinate got from the map
 
+    //Create the topic object used to send the trajectory
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/hmi_waypoint',
+      messageType : 'geometry_msgs/PoseStamped'
+    });
+
     /** Requires
      * Latitude
      * Longitude
@@ -95,7 +102,7 @@ class GMap extends React.Component{
     this.path.push(event.latLng);
     this.mapPath = event.latLng;//.toString();   
     
-    //console.log(this.path);
+    console.log(event.LatLng);
 
     this.coordinates.latitude = event.latLng.lat();
     this.coordinates.longitude = event.latLng.lng();
@@ -128,11 +135,60 @@ class GMap extends React.Component{
     //document.getElementById("map_path").value = event.latLng;//.toString();   
   }
 
+  sendCoordinatesMessage(){
+//Generate a ROSLib message
+    var poseStamped = {
+      header : {
+        seq : 0.0,
+        stamp : new Date().getTime() / 1000, //Get a timestamp in a format equivalent to the python one
+        frame_id : "map"
+      },
+      pose : {
+        position:{
+          x : this.coordinates.longitude,
+          y : this.coordinates.latitude,
+          z : 0.0
+        },
+        orientation:{
+          x : 0.0,
+          y : 0.0,
+          z : this.getAngle(), //To be modified => Previous point angle 
+          w : 0.0
+        }
+      }
+    };
+    
+    // Send the coordinates
+    var twist = new ROSLIB.Message(poseStamped);
+    this.cmdPath.publish(twist);
+    
+
+  }
+
+  getAngle(){
+    //Avoid errors due to too numborous decimal numbers by reshaping data
+    let x = [0,0];
+    let y = [0,0];
+
+    //Calculate angle
+    let adj = Math.sqrt(Math.pow(x[0]-x[1],2)+Math.pow(y[0]-y[1],2));
+    let hyp = Math.abs(x[1]-x[0]);
+    let angle = Math.cos(adj/hyp);
+
+    return angle;
+  }
+
   showLastCoordinates(){
     
-    var content = (this.coordinates.clicked) ? 
+    /*var content = (this.coordinates.clicked) ? 
     <div id="coordinateString"><p>Latitude: {this.coordinates.latitude}<p></p> Longitude: {this.coordinates.longitude}</p></div>:
-    "";
+    "";*/
+    var content = (this.coordinates.clicked) ? 
+      <div>
+          <button onClick={this.followTrajectory()}>Follow trajectory</button>
+          <small>Last coordinates (lat:{this.coordinates.latitude}, lng:{this.coordinates.longitude})</small>
+      </div>:
+      "";
     return content;
   }
 
@@ -140,6 +196,16 @@ class GMap extends React.Component{
   componentDidMount(){
     this.initMap();
     this.initGPSTrack();
+  }
+
+  followTrajectory(){
+      var cmdFollowTrajectory = new ROSLIB.Topic({
+        ros : ros,
+        name : '/start_trajectory',
+        messageType : 'bool'
+      });
+
+      cmdFollowTrajectory.publish(new ROSLIB.Message(true));
   }
 
   render(){
@@ -154,72 +220,3 @@ class GMap extends React.Component{
 
 
 
-/*
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 18,
-      center: center_gps,
-      mapTypeId: "satellite"
-    });
-
-    poly = new google.maps.Polyline({
-      strokeColor: '#F00000',
-      strokeOpacity: 1.0,
-      strokeWeight: 3
-    });
-    poly.setMap(map);
-
-    rover = new google.maps.Polyline({
-      strokeColor: '#00FF33',
-      strokeOpacity: 1.0,
-      strokeWeight: 3
-    });
-    rover.setMap(map);
-
-
-    // Add a listener for the click event
-    map.addListener('click', addLatLng);
-
-    element = document.getElementById("map");
-    document.getElementById("map").style.width="500px";
-    document.getElementById("map").style.height="400px";
-}
-
-// Handles click events on a map, and adds a new point to the Polyline.
-function addLatLng(event) {
-var path = poly.getPath();
-
-// Because path is an MVCArray, we can simply append a new coordinate
-// and it will automatically appear.
-    path.push(event.latLng);
-    document.getElementById("map_path").value = event.latLng;//.toString();    
-}
-
-///trace sur maps le chemin du rover/////////////
-addGPSTrack = function(){
-  var rover_Coords = new google.maps.LatLng(document.getElementById("lat").value, document.getElementById("long").value);
-
-
-  var rover_path = rover.getPath();
-
-  // Because path is an MVCArray, we can simply append a new coordinate
-  // and it will automatically appear.
-  rover_path.push(rover_Coords);
-  //rover.setMap("map");
-  //document.getElementById("map_path").value = event.latLng;//.toString();   
-}
-
-function addLine() {
-    poly.setMap(map);
-}
-
-
-function removeLine() {
-    poly.setMap(null);
-//poly = [{lat : 0, long : 0}];
-}
-
-
-initMap();
-
-*/
