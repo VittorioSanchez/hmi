@@ -42,7 +42,7 @@ window.onload = function(){
     });
 
     // We use the detection listener to process a published message on 
-    listener.subscribe(function(message) {
+    listener_detection.subscribe(function(message) {
         detection_number= message.data;
         
         // If detection == 0 then nothing is detected
