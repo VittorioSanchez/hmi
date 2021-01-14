@@ -230,7 +230,7 @@ class DashBoard extends React.Component{
                     <ReadOnlyField 
                     name="angle" 
                     type="value" 
-                    value={NaN}>
+                    value={speedValue.angular.z}>
                         Angle
                 </ReadOnlyField>
                     <button className="left" onClick={TurnLeft}>R</button>

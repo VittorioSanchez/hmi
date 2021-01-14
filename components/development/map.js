@@ -31,7 +31,7 @@ class GMap extends React.Component{
     this.addLine = this.addLine.bind(this);
     this.removeLine = this.removeLine.bind(this);
     this.addGPSTrack = this.addGPSTrack.bind(this);
-    this.addGPSTrack = this.addGPSTrack.bind(this);
+    //this.showLastCoordinates = this.showLastCoordinates.bind(this);
 
     //Will contain the GPS values
     this.coordinates = {
@@ -90,11 +90,16 @@ class GMap extends React.Component{
   addLatLng(event){
     this.path = this.poly.getPath();
 
-    // Because path is an MVCArray, we can simply append a new coordinate
+    // Because path is anshowLastCoordinates() MVCArray, we can simply append a new coordinate
     // and it will automatically appear.
     this.path.push(event.latLng);
     this.mapPath = event.latLng;//.toString();   
     
+    //console.log(this.path);
+
+    this.coordinates.latitude = event.latLng.lat();
+    this.coordinates.longitude = event.latLng.lng();
+
     this.coordinates.clicked = true;
   }
 
@@ -111,8 +116,9 @@ class GMap extends React.Component{
 
   ///trace sur maps le chemin du rover/////////////
   addGPSTrack() {
+    if(this.rover == undefined) return false;
     var rover_Coords = new google.maps.LatLng(this.coordinates.latitude, this.coordinates.longitude);
-
+    
     var rover_path = this.rover.getPath();
 
     // Because path is an MVCArray, we can simply append a new coordinate
@@ -123,8 +129,9 @@ class GMap extends React.Component{
   }
 
   showLastCoordinates(){
+    
     var content = (this.coordinates.clicked) ? 
-    <p>Latitude: {this.coordinates.latitude} Longitude: {this.coordinates.longitude}</p>:
+    <div id="coordinateString"><p>Latitude: {this.coordinates.latitude}<p></p> Longitude: {this.coordinates.longitude}</p></div>:
     "";
     return content;
   }
