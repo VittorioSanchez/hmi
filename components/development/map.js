@@ -152,7 +152,7 @@ class GMap extends React.Component{
         orientation:{
           x : 0.0,
           y : 0.0,
-          z : this.getAngle(), //To be modified => Previous point angle 
+          z : 0.0, //Angle not asked animore
           w : 0.0
         }
       }
@@ -165,24 +165,7 @@ class GMap extends React.Component{
 
   }
 
-  getAngle(){
-    //Avoid errors due to too numborous decimal numbers by reshaping data
-    let x = [0,0];
-    let y = [0,0];
-
-    //Calculate angle
-    let adj = Math.sqrt(Math.pow(x[0]-x[1],2)+Math.pow(y[0]-y[1],2));
-    let hyp = Math.abs(x[1]-x[0]);
-    let angle = Math.cos(adj/hyp);
-
-    return angle;
-  }
-
   showLastCoordinates(){
-    
-    /*var content = (this.coordinates.clicked) ? 
-    <div id="coordinateString"><p>Latitude: {this.coordinates.latitude}<p></p> Longitude: {this.coordinates.longitude}</p></div>:
-    "";*/
     var content = (this.coordinates.clicked) ? 
       <div>
           <button onClick={this.followTrajectory()}>Follow trajectory</button>
