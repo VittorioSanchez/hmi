@@ -14,21 +14,28 @@ class ReadOnlyField extends React.Component{
 
         switch (this.props.type) {
             case "value":
-                
+                return (<div className={`readOnly field ${this.props.type} ${otherClasses}`}>{this.props.children} {this.renderValue()}</div>)
                 break;
             case "boolean":
                 otherClasses += this.props.value;
+                return (<div className={`readOnly field ${this.props.type} ${otherClasses}`}>{this.props.children} {this.renderValue()}</div>)
+                break;
+            case "array":
+                return (<div className={`readOnly field ${this.props.type} ${otherClasses}`}>{this.props.children} {this.renderArray()}</div>)
                 break;
             default:
                 break;
         }
-
-        /* Faire tout se passer ici */
-        return (<div className={`readOnly field ${this.props.type} ${otherClasses}`}>{this.props.children} {this.renderValue()}</div>)
     }
 
     renderValue(){
         return <div>{this.props.value}</div>;
+    }
+    renderArray(){
+        return this.props.value.forEach(function(item, index, array){
+            <li>{item}</li>
+        });
+        
     }
 }
 
@@ -217,10 +224,9 @@ class DashBoard extends React.Component{
 
             <Block name="Detections" id="detections">
                 <ReadOnlyField 
-                        name="speed_desired" 
-                        type="value" 
-                        value={detection_string_array[0]}>
-                            1:
+                        name="latest_detection" 
+                        type="array" 
+                        value={detection_string_array}>
                 </ReadOnlyField>
             </Block>
 
