@@ -213,10 +213,7 @@ class DashBoard extends React.Component{
 
     render(){
         return (<div><h4>Dashboard</h4><div className="content">
-            <Tab id="video" name="Camera" position="bottom">
-                <VideoBlock id="direct-video" name="Direct stream" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/detection_node/image_raw&type=ros_compressed`}></VideoBlock>
-                <VideoBlock id="ai-video" name="Object Detection" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/detection_node/image&type=ros_compressed`}></VideoBlock>
-            </Tab>
+            <VideoBlock id="ai-video" name="Object Detection" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/detection_node/image&type=ros_compressed`}></VideoBlock>
 
             <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
 
@@ -256,12 +253,6 @@ class DashBoard extends React.Component{
                     type="value" 
                     value={Bat_mes}>
                         Batterie level
-                </ReadOnlyField>
-                <ReadOnlyField 
-                    name="value_field" 
-                    type="value" 
-                    value="-56.25789">
-                        Signal Strengh (dBm)
                 </ReadOnlyField>
             </Block>
             <Block name="Velocity" id="block2">

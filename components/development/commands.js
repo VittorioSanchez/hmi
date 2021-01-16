@@ -32,8 +32,8 @@ function StopVehicle(){
   SendMoveCommand();
 }
 
-function TurnLeft(){
-  console.log("Turn to the left");
+function TurnRight(){
+  console.log("Turn to the right");
   if (speedValue.angular.z <= -30) {
     speedValue.angular.z = -30;
   } else {
@@ -43,8 +43,8 @@ function TurnLeft(){
   console.log(speedValue.angular.z);
 }
 
-function TurnRight(){
-  console.log("Turn to the right");
+function TurnLeft(){
+  console.log("Turn to the left");
   if (speedValue.angular.z >= 30) {
     speedValue.angular.z = 30;
   } else {
