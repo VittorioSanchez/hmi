@@ -168,7 +168,8 @@ class GMap extends React.Component{
   showLastCoordinates(){
     var content = (this.coordinates.clicked) ? 
       <div>
-          <button onClick={this.followTrajectory()}>Follow trajectory</button>
+          <button onClick={this.removeLine}>Remove waypoints</button>
+          <button onClick={this.followTrajectory()}>Follow</button>
           <small>Last coordinates (lat:{this.coordinates.latitude}, lng:{this.coordinates.longitude})</small>
       </div>:
       "";
@@ -192,10 +193,10 @@ class GMap extends React.Component{
   }
 
   render(){
+    /**            <button onClick={this.removeLine}>Remove line</button>
+            <button onClick={this.addLine}>Add line</button> */
     return <div>
             <div id="map" ref={this.html}></div>
-            <button onClick={this.removeLine}>Remove line</button>
-            <button onClick={this.addLine}>Add line</button>
             {this.showLastCoordinates()}
           </div>;
   }
