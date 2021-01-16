@@ -217,7 +217,7 @@ class DashBoard extends React.Component{
 
             <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
 
-            <Block name="Detections" id="detections">
+            <Block name="Latest detections" id="detections">
                 <ReadOnlyField 
                         name="latest_detection" 
                         type="array" 
