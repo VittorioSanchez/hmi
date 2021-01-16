@@ -10,7 +10,7 @@ const e = React.createElement;
 //ReadOnlyField, this component will render each simple variables (value, boolean, etc...)
 class ReadOnlyField extends React.Component{
     render(){
-        var otherClasses = "";
+        var otherClasses = (this.props.className != undefined)?this.props.className:"";
 
         switch (this.props.type) {
             case "value":
@@ -32,6 +32,11 @@ class ReadOnlyField extends React.Component{
         return <div>{this.props.value}</div>;
     }
     renderArray(){
+        if(this.props.value.length <= 0){
+            let replacementText = 
+                (this.props.placeholder == undefined)? <i>Nothing yet</i> : this.props.placeholder;
+            return replacementText;
+        }
         return this.props.value.map((detection) => <li>{detection}</li>);
         
     }
@@ -213,15 +218,17 @@ class DashBoard extends React.Component{
 
     render(){
         return (<div><h4>Dashboard</h4><div className="content">
-            <VideoBlock id="ai-video" name="Object Detection" tabbed="true" url={`http://${LOCALHOST}:${8080}/stream?topic=/detection_node/image&type=ros_compressed`}></VideoBlock>
+            <VideoBlock id="ai-video" name="Camera" url={`http://${LOCALHOST}:${8080}/stream?topic=/detection_node/image&type=ros_compressed`}></VideoBlock>
 
             <VideoBlock id="rviz" name="LiDAR" url={`http://${LOCALHOST}:${8080}/stream?topic=/raspicam_node/image&type=ros_compressed`}></VideoBlock>
 
             <Block name="Detections" id="detections">
                 <ReadOnlyField 
                         name="latest_detection" 
-                        type="array" 
+                        type="array"
+                        placeholder={<i>Nothing detected yet</i>}
                         value={detection_string_array}>
+                            <p>Lastest detections</p>
                 </ReadOnlyField>
             </Block>
 
