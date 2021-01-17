@@ -7,11 +7,15 @@ var detection_number = 0;
 var detection_string_array = ['nothing', 'nothing', 'nothing', 'nothing', 'nothing'];
 
 window.onload = function(){
-      // Connect to Rosbridge server
-      // ------------------
+    
     var ros = new ROSLIB.Ros({
-    	url : 'ws://localhost:9090'
+    url : 'ws://localhost:9090'
     });
+  var ros = new ROSLIB.Ros({
+    url : 'ws://localhost:9090'
+  });
+
+
 
       // Suscribing a Topic
       // ------------------
