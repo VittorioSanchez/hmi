@@ -62,6 +62,7 @@ class GMap extends React.Component{
     this.followTrajectory = this.followTrajectory.bind(this);
     this.removeLastPoint = this.removeLastPoint.bind(this);
     this.addGPSTrack = this.addGPSTrack.bind(this);
+    this.sendCoordinatesMessage = this.sendCoordinatesMessage.bind(this);
 
     //Will contain the GPS values
     this.coordinates = {
@@ -71,7 +72,8 @@ class GMap extends React.Component{
       status:{
         service : 0
       },
-      numberOfWaypoints : 0
+      numberOfWaypoints : 0,
+      seq : 0
     };
   }
 
@@ -131,6 +133,7 @@ class GMap extends React.Component{
 
     this.coordinates.clicked = true;
     this.coordinates.numberOfWaypoints++;
+    this.sendCoordinatesMessage();
   }
 
   addLine() {
@@ -177,9 +180,9 @@ class GMap extends React.Component{
 
   sendCoordinatesMessage(){
     //Generate a ROSLib message
-    var poseStamped = {
+    var wpClicked = new ROSLIB.Message({
       header : {
-        seq : 0.0,
+        seq : this.coordinates.seq,
         stamp : new Date().getTime() / 1000, //Get a timestamp in a format equivalent to the python one
         frame_id : "map"
       },
@@ -196,11 +199,11 @@ class GMap extends React.Component{
           w : 0.0
         }
       }
-    };
+    });
     
-    // Send the coordinates
-    var twist = new ROSLIB.Message(poseStamped);
-    this.cmdWaypoints.publish(twist);
+    // Send the coordinates   
+    this.cmdWaypoints.publish(wpClicked);
+    this.coordinates.seq = this.coordinates.seq + 1;
   }
 
   showLastCoordinates(){
