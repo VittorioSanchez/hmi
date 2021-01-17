@@ -3,6 +3,20 @@
 
 var addGPSTrack;
 
+//constant to be sent through /hmi_state
+var HMI_STATE_EDIT = new ROSLIB.Message({
+  data : 0
+});
+var HMI_STATE_REMOVE = new ROSLIB.Message({
+  data : 2
+});
+var HMI_STATE_DELETE = new ROSLIB.Message({
+  data : 3
+});
+var HMI_STATE_FOLLOW = new ROSLIB.Message({
+  data : 1
+});
+
 class GMap extends React.Component{
   constructor(props){
     super(props)
@@ -29,7 +43,7 @@ class GMap extends React.Component{
     this.cmdTrajectoryState = new ROSLIB.Topic({
       ros : ros,
       name : '/hmi_state',
-      messageType : 'Int16'
+      messageType : 'std_msgs/Int16'
     });
 
     /** Requires
@@ -44,6 +58,8 @@ class GMap extends React.Component{
     this.addLatLng = this.addLatLng.bind(this);
     this.addLine = this.addLine.bind(this);
     this.removeLine = this.removeLine.bind(this);
+    this.editWp = this.editWp.bind(this);
+    this.followTrajectory = this.followTrajectory.bind(this);
     this.removeLastPoint = this.removeLastPoint.bind(this);
     this.addGPSTrack = this.addGPSTrack.bind(this);
 
@@ -92,7 +108,7 @@ class GMap extends React.Component{
   initGPSTrack(){
     var GPS_listener = new ROSLIB.Topic({
       ros : ros,
-      name : '/android/fix', 
+      name : '/pose_car/fix', 
       messageType : 'sensor_msgs/NavSatFix'
     });
   
@@ -126,15 +142,23 @@ class GMap extends React.Component{
     this.path.pop();
     this.poly.setPath(this.path);
 
-    this.cmdTrajectoryState.publish(new ROSLIB.Message(2));
+    this.cmdTrajectoryState.publish(new ROSLIB.Message(HMI_STATE_REMOVE));
     this.coordinates.numberOfWaypoints--;
   }
 
   removeLine() {
     this.poly.setPath([]);
     
-    this.cmdTrajectoryState.publish(new ROSLIB.Message(3));
+    this.cmdTrajectoryState.publish(new ROSLIB.Message(HMI_STATE_DELETE));
     this.coordinates.numberOfWaypoints = 0;
+  }
+  
+  followTrajectory(){
+    this.cmdTrajectoryState.publish(new ROSLIB.Message(HMI_STATE_FOLLOW));
+  }
+  
+  editWp(){
+    this.cmdTrajectoryState.publish(new ROSLIB.Message(HMI_STATE_EDIT));
   }
 
   ///trace sur maps le chemin du rover/////////////
@@ -182,6 +206,7 @@ class GMap extends React.Component{
   showLastCoordinates(){
     var content = (this.coordinates.clicked) ? 
       <div>
+      	  <button onClick={this.editWp}>Edit</button>
           <button onClick={this.removeLine}>Remove waypoints</button>
           <button onClick={this.removeLastPoint}>Remove last point</button>
           <button onClick={this.followTrajectory}>Follow</button>
@@ -199,9 +224,7 @@ class GMap extends React.Component{
     this.loaded = true;
   }
 
-  followTrajectory(){
-    this.cmdTrajectoryState.publish(new ROSLIB.Message(1));
-  }
+
 
   render(){
     /**            <button onClick={this.removeLine}>Remove line</button>
