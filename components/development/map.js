@@ -13,16 +13,23 @@ class GMap extends React.Component{
     this.map;
     this.center_gps = new google.maps.LatLng(43.571105, 1.466366);
     this.html = React.createRef();
+    this.loaded = false;
     
     // Variable used to draw/delete a trajectory
     this.mapPath; //Last point placed on the map
     this.path = new Array(); // Set of coordinate got from the map
 
     //Create the topic object used to send the trajectory
-    var cmdVel = new ROSLIB.Topic({
+    this.cmdWaypoints = new ROSLIB.Topic({
       ros : ros,
-      name : '/hmi_waypoint',
+      name : '/hmi_wp',
       messageType : 'geometry_msgs/PoseStamped'
+    });
+
+    this.cmdTrajectoryState = new ROSLIB.Topic({
+      ros : ros,
+      name : '/hmi_state',
+      messageType : 'Int16'
     });
 
     /** Requires
@@ -37,8 +44,8 @@ class GMap extends React.Component{
     this.addLatLng = this.addLatLng.bind(this);
     this.addLine = this.addLine.bind(this);
     this.removeLine = this.removeLine.bind(this);
+    this.removeLastPoint = this.removeLastPoint.bind(this);
     this.addGPSTrack = this.addGPSTrack.bind(this);
-    //this.showLastCoordinates = this.showLastCoordinates.bind(this);
 
     //Will contain the GPS values
     this.coordinates = {
@@ -47,7 +54,8 @@ class GMap extends React.Component{
       altitude : 0,
       status:{
         service : 0
-      }
+      },
+      numberOfWaypoints : 0
     };
   }
 
@@ -61,7 +69,7 @@ class GMap extends React.Component{
     });
 
     this.poly = new google.maps.Polyline({
-      strokeColor: '#F00000',
+      strokeColor: '#FF0000',
       strokeOpacity: 1.0,
       strokeWeight: 3
     });
@@ -84,7 +92,7 @@ class GMap extends React.Component{
   initGPSTrack(){
     var GPS_listener = new ROSLIB.Topic({
       ros : ros,
-      name : '/android/fix', //'/ros_GPS',
+      name : '/android/fix', 
       messageType : 'sensor_msgs/NavSatFix'
     });
   
@@ -100,25 +108,33 @@ class GMap extends React.Component{
     // Because path is anshowLastCoordinates() MVCArray, we can simply append a new coordinate
     // and it will automatically appear.
     this.path.push(event.latLng);
-    this.mapPath = event.latLng;//.toString();   
-    
-    console.log(event.LatLng);
+    this.mapPath = event.latLng;
 
     this.coordinates.latitude = event.latLng.lat();
     this.coordinates.longitude = event.latLng.lng();
 
     this.coordinates.clicked = true;
+    this.coordinates.numberOfWaypoints++;
   }
 
   addLine() {
     this.poly.setMap(this.map);
   }
 
+  removeLastPoint(){
+    this.path = this.poly.getPath().getArray();
+    this.path.pop();
+    this.poly.setPath(this.path);
+
+    this.cmdTrajectoryState.publish(new ROSLIB.Message(2));
+    this.coordinates.numberOfWaypoints--;
+  }
 
   removeLine() {
-    this.map = null;
-    this.poly.setMap(this.map);
-  //poly = [{lat : 0, long : 0}];
+    this.poly.setPath([]);
+    
+    this.cmdTrajectoryState.publish(new ROSLIB.Message(3));
+    this.coordinates.numberOfWaypoints = 0;
   }
 
   ///trace sur maps le chemin du rover/////////////
@@ -136,7 +152,7 @@ class GMap extends React.Component{
   }
 
   sendCoordinatesMessage(){
-//Generate a ROSLib message
+    //Generate a ROSLib message
     var poseStamped = {
       header : {
         seq : 0.0,
@@ -160,16 +176,15 @@ class GMap extends React.Component{
     
     // Send the coordinates
     var twist = new ROSLIB.Message(poseStamped);
-    this.cmdPath.publish(twist);
-    
-
+    this.cmdWaypoints.publish(twist);
   }
 
   showLastCoordinates(){
     var content = (this.coordinates.clicked) ? 
       <div>
           <button onClick={this.removeLine}>Remove waypoints</button>
-          <button onClick={this.followTrajectory()}>Follow</button>
+          <button onClick={this.removeLastPoint}>Remove last point</button>
+          <button onClick={this.followTrajectory}>Follow</button>
           <small>Last coordinates (lat:{this.coordinates.latitude}, lng:{this.coordinates.longitude})</small>
       </div>:
       "";
@@ -180,16 +195,12 @@ class GMap extends React.Component{
   componentDidMount(){
     this.initMap();
     this.initGPSTrack();
+    
+    this.loaded = true;
   }
 
   followTrajectory(){
-      var cmdFollowTrajectory = new ROSLIB.Topic({
-        ros : ros,
-        name : '/start_trajectory',
-        messageType : 'bool'
-      });
-
-      cmdFollowTrajectory.publish(new ROSLIB.Message(true));
+    this.cmdTrajectoryState.publish(new ROSLIB.Message(1));
   }
 
   render(){
