@@ -42,7 +42,7 @@ class GMap extends React.Component{
 
     this.cmdTrajectoryState = new ROSLIB.Topic({
       ros : ros,
-      name : '/hmi_state',
+      name : '/hmi_wp_status',
       messageType : 'std_msgs/Int16'
     });
 
@@ -188,8 +188,8 @@ class GMap extends React.Component{
       },
       pose : {
         position:{
-          x : this.coordinates.longitude,
-          y : this.coordinates.latitude,
+          x : this.coordinates.latitude,
+          y : this.coordinates.longitude,
           z : 0.0
         },
         orientation:{
