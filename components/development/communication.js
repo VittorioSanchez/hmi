@@ -7,11 +7,6 @@ var detection_number = 0;
 var detection_string_array = new Array();
 
 window.onload = function(){
-      // Connect to Rosbridge server
-      // ------------------
-    var ros = new ROSLIB.Ros({
-    	url : 'ws://localhost:9090'
-    });
 
       // Suscribing a Topic
       // ------------------
