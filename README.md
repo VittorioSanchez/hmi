@@ -55,7 +55,7 @@ git clone https://github.com/siec2020/hmi
 Rename the directory to html
 
 ```bash
-mv geicar-hmi html
+mv hmi html
 ```
 
 Then go to this url http://127.0.0.1/ , to see the hmi
