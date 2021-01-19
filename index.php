@@ -24,7 +24,7 @@
 		// -----------------
 
 		var ros = new ROSLIB.Ros({
-		url : 'ws://'+LOCALHOST+':1609'
+		url : 'ws://'+LOCALHOST+':9090'
 		});
 
 		ros.on('connection', function() {

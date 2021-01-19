@@ -4,14 +4,9 @@ var Bat_mes = 0;
 var VMG_mes = 0;
 var VMD_mes = 0;
 var detection_number = 0;
-var detection_string_array = ['nothing', 'nothing', 'nothing', 'nothing', 'nothing'];
+var detection_string_array = new Array();
 
 window.onload = function(){
-      // Connect to Rosbridge server
-      // ------------------
-    var ros = new ROSLIB.Ros({
-    	url : 'ws://localhost:9090'
-    });
 
       // Suscribing a Topic
       // ------------------
@@ -49,48 +44,48 @@ window.onload = function(){
 
     // We use the detection listener to process a published message on 
     listener_detection.subscribe(function(message) {
+        let displayLimit = 5;
         detection_number= message.data;
         
         // If detection == 0 then nothing is detected
         if (detection_number != 0){ //something is detected
             
-            // We update the detection_string_array by shifting values
-            for (let i = 4; i > 0; i--) { 
-                detection_string_array[i] = detection_string_array[i-1];
-            }
-            
             //We update the latest value of detection_string_array
+            //Add detected object on the top of the array list
             switch (detection_number){
                 case 1:
-                    detection_string_array[0] = 'Person';
+                    detection_string_array.unshift('Person');
                     break;
                 case 2:
-                    detection_string_array[0] = 'Baggage';
+                    detection_string_array.unshift('Baggage');
                     break;
                 case 3:
-                    detection_string_array[0] = 'Ball';
+                    detection_string_array.unshift('Ball');
                     break;
                 case 4:
-                    detection_string_array[0] = 'Bicycle';
+                    detection_string_array.unshift('Bicycle');
                     break;
                 case 5:
-                    detection_string_array[0] = 'Bus';
+                    detection_string_array.unshift('Bus');
                     break;
                 case 6:
-                    detection_string_array[0] = 'Car';
+                    detection_string_array.unshift('Car');
                     break;  
                 case 7:
-                    detection_string_array[0] = 'Cat';
+                    detection_string_array.unshift('Cat');
                     break;  
                 case 8:
-                    detection_string_array[0] = 'Dog';
+                    detection_string_array.unshift('Dog');
                     break;  
                 case 9:
-                    detection_string_array[0] = 'Motorcycle';
+                    detection_string_array.unshift('Motorcycle');
                     break;  
                 default: null;
             }      
         }
+
+        //We limit the number of displayed items;
+        detection_number.slice(0,displayLimit);
     });
 	
 };
