@@ -84,7 +84,7 @@ window.onload = function(){
         }
 
         //We limit the number of displayed items;
-        detection_number.slice(0,displayLimit);
+        detection_number = detection_number.slice(0,displayLimit);
     });
 	
 };
